@@ -1,11 +1,18 @@
 package app
 
-import "net/http"
+import (
+	"log"
+	"net/http"
+
+	"github.com/gorilla/mux"
+)
 
 func Start() {
-	http.HandleFunc("/greet", greet)
+	router := mux.NewRouter()
+	router.HandleFunc("/greet", greet)
 
-	http.HandleFunc("/customers", getAllCustomers)
+	router.HandleFunc("/customers", getAllCustomers)
+	router.HandleFunc("/customers/{customer_id:[0-9]+}", getCustomer)
 
-	http.ListenAndServe("localhost:8000", nil)
+	log.Fatal(http.ListenAndServe("localhost:8000", router))
 }
